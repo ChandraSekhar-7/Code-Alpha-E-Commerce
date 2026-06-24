@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 // --- SECURITY: ONLY ALLOW YOUR LIVE FRONTEND ---
 app.use(cors({
-    origin: 'https://code-alpha-e-commerce.onrender.com', // Your Render live link
+    origin: 'http://localhost:3000', // Your local development link
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
@@ -60,25 +60,6 @@ app.post('/api/orders', async (req, res) => {
         await newOrder.save();
         res.status(201).json({ message: "Order placed successfully!" });
     } catch (err) { res.status(400).json({ error: "Failed to process order" }); }
-});// --- NEW ROUTE: GET SINGLE PRODUCT DETAILS ---
-app.get('/api/products/:id', async (req, res) => {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).json({ error: "Product not found" });
-        res.json(product);
-    } catch (err) { 
-        res.status(500).json({ error: "Invalid Product ID" }); 
-    }
 });
 
-// --- NEW ROUTE: GET USER'S ORDER HISTORY ---
-app.get('/api/orders/:userId', async (req, res) => {
-    try {
-        // Find orders matching the userId, sort by newest first
-        const orders = await Order.find({ userId: req.params.userId }).sort({ _id: -1 });
-        res.json(orders);
-    } catch (err) { 
-        res.status(500).json({ error: "Failed to fetch orders" }); 
-    }
-});
 app.listen(process.env.PORT || 3000, () => console.log(`✅ Server running`));
