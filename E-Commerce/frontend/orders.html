@@ -5,38 +5,36 @@
     <title>My Orders - CodeAlpha Store</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .orders-container { max-width: 900px; margin: 3rem auto; padding: 0 5%; }
+        .orders-container { max-width: 900px; margin: 3rem auto; padding: 0 20px; }
         .order-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .order-header { display: flex; justify-content: space-between; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 15px; }
         .order-status { font-weight: bold; color: #f39c12; background: #fdf3e7; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; }
-        .order-items { list-style: none; padding: 0; }
+        .order-items { list-style: none; padding: 0; margin: 0; }
         .order-items li { display: flex; justify-content: space-between; margin-bottom: 8px; color: #555; }
-        .order-total { text-align: right; font-size: 1.2rem; font-weight: bold; color: #27ae60; margin-top: 15px; }
+        .order-total { text-align: right; font-size: 1.2rem; font-weight: bold; margin-top: 15px; }
+        .order-total.unpaid { color: #e67e22; } /* Orange color for pending cash payments */
+        .order-total.paid { color: #27ae60; }   /* Green color for finalized electronic payments */
     </style>
 </head>
 <body>
-    <header>
-        <h2><a href="index.html" style="text-decoration:none; color:inherit;">CodeAlpha Store</a></h2>
+    <header style="padding: 20px; background: #2c3e50; color: white; display: flex; justify-content: space-between;">
+        <h2><a href="index.html" style="text-decoration:none; color:white;">CodeAlpha Store</a></h2>
         <nav>
-            <a href="cart.html">🛒 Cart</a>
+            <a href="index.html" style="color:white; margin-right:15px; text-decoration:none;">🏪 Store</a>
+            <a href="cart.html" style="color:white; text-decoration:none;">🛒 Cart</a>
         </nav>
     </header>
 
     <main class="orders-container">
-        <h2 style="margin-bottom: 20px; color: #2c3e50;">Order History</h2>
+        <h2 style="margin-bottom: 20px; color: #2c3e50;">Your Purchase History</h2>
         <div id="orders-list">
-            <p style="text-align: center;">Fetching your orders...</p>
+            <p style="text-align: center;">Retrieving order database documentation...</p>
         </div>
     </main>
 
     <script>
-        // Make sure to change this to your live Render backend URL!
         const API_URL = 'http://localhost:3000/api';
-        const userId = localStorage.getItem('ecommerce_userId');
-
-        if (!userId) {
-            window.location.href = 'login.html'; // Redirect if not logged in
-        }
+        const userId = localStorage.getItem('ecommerce_userId') || "guest123";
 
         async function loadOrders() {
             try {
@@ -44,36 +42,59 @@
                 const orders = await response.json();
                 
                 const ordersList = document.getElementById('orders-list');
+                if(!ordersList) return;
                 ordersList.innerHTML = '';
 
-                if (orders.length === 0) {
-                    ordersList.innerHTML = '<p style="text-align: center; color: #7f8c8d;">You have no past orders.</p>';
+                if (!orders || orders.length === 0) {
+                    ordersList.innerHTML = '<p style="text-align: center; color: #7f8c8d;">You have no recorded past purchases.</p>';
                     return;
                 }
 
                 orders.forEach(order => {
-                    let itemsHtml = order.items.map(item => `<li><span>${item.quantity}x ${item.name}</span> <span>$${(item.price * item.quantity).toFixed(2)}</span></li>`).join('');
+                    let itemsHtml = order.items.map(item => `
+                        <li>
+                            <span>${item.quantity}x ${item.name}</span> 
+                            <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                        </li>
+                    `).join('');
+                    
+                    // --- DYNAMIC PAYMENT STATUS LOGIC ---
+                    let paymentLabel = "";
+                    let totalClass = "";
+
+                    if (order.paymentMode === "Cash on Delivery") {
+                        paymentLabel = "Amount to be Paid";
+                        totalClass = "unpaid";
+                    } else {
+                        paymentLabel = "Amount Paid";
+                        totalClass = "paid";
+                    }
                     
                     ordersList.innerHTML += `
                         <div class="order-card">
                             <div class="order-header">
-                                <span><strong>Order ID:</strong> ${order._id.substring(0, 8)}...</span>
-                                <span class="order-status">${order.status}</span>
+                                <span><strong>Order Reference ID:</strong> ${order._id}</span>
+                                <span class="order-status">${order.status || 'Pending'}</span>
                             </div>
                             <ul class="order-items">
                                 ${itemsHtml}
                             </ul>
-                            <div class="order-total">Total: $${order.totalAmount.toFixed(2)}</div>
-                            <p style="font-size: 0.85rem; color: #888; margin-top: 10px;">Shipped to: ${order.address} | Paid via: ${order.paymentMode}</p>
+                            <div class="order-total ${totalClass}">
+                                ${paymentLabel}: $${order.totalAmount.toFixed(2)}
+                            </div>
+                            <p style="font-size: 0.85rem; color: #888; margin-top: 10px; background: #fdfdfd; padding: 8px; border-radius:4px;">
+                                📍 <strong>Shipping Address:</strong> ${order.address} <br>
+                                💳 <strong>Payment Method:</strong> ${order.paymentMode}
+                            </p>
                         </div>
                     `;
                 });
             } catch (error) {
-                document.getElementById('orders-list').innerHTML = '<p style="text-align: center; color: red;">Failed to load order history.</p>';
+                document.getElementById('orders-list').innerHTML = '<p style="text-align: center; color: red;">Failed to retrieve order history documentation from backend.</p>';
             }
         }
 
-        loadOrders();
+        window.onload = loadOrders;
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const dbUser = process.env.DB_USER;
 const dbPass = process.env.DB_PASS;
-const MONGO_URI = `mongodb+srv://${dbUser}:${dbPass}@project.kjzooku.mongodb.net/codealpha_store?appName=Project`;
+const MONGO_URI = `mongodb+srv://chandrasekhartatimalla_db_user1:chandhu@project.kjzooku.mongodb.net/codealpha_store?appName=Project`;
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connected to Atlas for seeding...'))
