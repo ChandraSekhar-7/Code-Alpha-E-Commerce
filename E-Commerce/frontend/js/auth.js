@@ -1,7 +1,7 @@
 // frontend/js/auth.js
 // 1. Changed domain to match your live link structure 
 // 2. Changed /api/users to /api/auth to match server.js routes exactly!
-const API_URL = 'https://code-alpha-e-commerce-1.onrender.com/api/auth';
+const API_URL = 'https://code-alpha-e-commerce.onrender.com/api/auth';
 
 async function register() {
     try {
