@@ -36,25 +36,25 @@ const Order = mongoose.model('Order', new mongoose.Schema({
 }));
 
 // --- ROUTES ---
-app.get('https://code-alpha-e-commerce.onrender.com/api/products', async (req, res) => {
+app.get('/api/products', async (req, res) => {
     try {
         const products = await Product.find();
         res.json(products);
     } catch (err) { res.status(500).json({ error: "Failed to fetch products" }); }
 });
-app.post('https://code-alpha-e-commerce.onrender.com/api/users/register', async (req, res) => {
+app.post('/api/users/register', async (req, res) => {
     try {
         const newUser = new User(req.body);
         await newUser.save();
         res.status(201).json({ message: "Registration successful!" });
     } catch (err) { res.status(400).json({ error: "Username might exist." }); }
 });
-app.post('https://code-alpha-e-commerce.onrender.com/api/users/login', async (req, res) => {
+app.post('/api/users/login', async (req, res) => {
     const user = await User.findOne({ username: req.body.username, password: req.body.password });
     if (user) res.json({ message: "Login successful", userId: user._id });
     else res.status(401).json({ error: "Invalid credentials" });
 });
-app.post('https://code-alpha-e-commerce.onrender.com/api/orders', async (req, res) => {
+app.post('/api/orders', async (req, res) => {
     try {
         const newOrder = new Order(req.body);
         await newOrder.save();
