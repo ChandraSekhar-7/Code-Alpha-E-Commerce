@@ -10,7 +10,7 @@ let allProducts = []; // Save products here so we can filter them
 
 async function fetchProducts() {
     try {
-        const response = await fetch('https://code-alpha-e-commerce-backend-1.onrender.com/api/products');
+        const response = await fetch('http://localhost:3000/api/products');
         allProducts = await response.json();
         renderProducts(allProducts); // Show all initially
     } catch (error) {

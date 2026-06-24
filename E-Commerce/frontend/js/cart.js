@@ -45,7 +45,7 @@ async function placeOrder(event) {
     };
 
     try {
-        const response = await fetch('https://code-alpha-e-commerce-backend-1.onrender.com/api/orders', {
+        const response = await fetch('http://localhost:3000/api/orders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)

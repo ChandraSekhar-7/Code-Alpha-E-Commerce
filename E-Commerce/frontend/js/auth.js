@@ -1,4 +1,4 @@
-const API_URL = 'https://code-alpha-e-commerce-backend-1.onrender.com/api/users';
+const API_URL = 'http://localhost:3000/api/users';
 
 async function register() {
     try {
