@@ -12,8 +12,8 @@
         .order-items { list-style: none; padding: 0; margin: 0; }
         .order-items li { display: flex; justify-content: space-between; margin-bottom: 8px; color: #555; }
         .order-total { text-align: right; font-size: 1.2rem; font-weight: bold; margin-top: 15px; }
-        .order-total.unpaid { color: #e67e22; } /* Orange color for pending cash payments */
-        .order-total.paid { color: #27ae60; }   /* Green color for finalized electronic payments */
+        .order-total.unpaid { color: #e67e22; } /* Orange formatting for COD */
+        .order-total.paid { color: #27ae60; }   /* Green formatting for online payments */
     </style>
 </head>
 <body>
@@ -28,16 +28,25 @@
     <main class="orders-container">
         <h2 style="margin-bottom: 20px; color: #2c3e50;">Your Purchase History</h2>
         <div id="orders-list">
-            <p style="text-align: center;">Retrieving order database documentation...</p>
+            <p style="text-align: center;">Retrieving your customized order timeline...</p>
         </div>
     </main>
 
     <script>
-        const API_URL = 'https://code-alpha-e-commerce.onrender.com/api';
-        const userId = localStorage.getItem('ecommerce_userId') || "guest123";
+        const API_URL = 'https://code-alpha-e-commerce-1.onrender.com/api';
 
         async function loadOrders() {
             try {
+                // 1. Secure check: extract the logged-in user's storage session key
+                const userId = localStorage.getItem('ecommerce_userId');
+                
+                if (!userId) {
+                    document.getElementById('orders-list').innerHTML = 
+                        '<p style="text-align: center; color: #e74c3c; font-weight: bold;">Please log in to view your personalized purchase history.</p>';
+                    return;
+                }
+
+                // 2. Fetch passing the unique userId in the path parameter
                 const response = await fetch(`${API_URL}/orders/${userId}`);
                 const orders = await response.json();
                 
@@ -58,7 +67,7 @@
                         </li>
                     `).join('');
                     
-                    // --- DYNAMIC PAYMENT STATUS LOGIC ---
+                    // --- DYNAMIC PAYMENT METHOD RENDERING ---
                     let paymentLabel = "";
                     let totalClass = "";
 
@@ -90,7 +99,8 @@
                     `;
                 });
             } catch (error) {
-                document.getElementById('orders-list').innerHTML = '<p style="text-align: center; color: red;">Failed to retrieve order history documentation from backend.</p>';
+                document.getElementById('orders-list').innerHTML = 
+                    '<p style="text-align: center; color: red;">Failed to retrieve order history documentation from backend.</p>';
             }
         }
 
