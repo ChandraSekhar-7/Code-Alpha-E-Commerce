@@ -1,5 +1,5 @@
 // frontend/js/cart.js
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://code-alpha-e-commerce.onrender.com/api';
 
 document.addEventListener('DOMContentLoaded', () => {
     let cart = JSON.parse(localStorage.getItem('ecommerce_cart')) || [];

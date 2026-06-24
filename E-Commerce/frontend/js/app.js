@@ -12,7 +12,7 @@ function logout() {
 
 // --- GLOBAL APP INITIALIZATION STATE ---
 let allProducts = []; // Save products here globally so we can filter them
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://code-alpha-e-commerce.onrender.com/api';
 
 // --- DATA LAYER: BACKEND FETCHING ---
 async function fetchProducts() {

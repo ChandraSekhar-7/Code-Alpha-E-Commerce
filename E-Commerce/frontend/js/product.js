@@ -1,5 +1,5 @@
 // frontend/js/product.js
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://code-alpha-e-commerce.onrender.com/api';
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);

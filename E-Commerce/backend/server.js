@@ -7,7 +7,9 @@ const app = express();
 app.use(express.json());
 
 // --- SECURITY: ALLOW LOCALHOST FRONTEND REQUESTS ---
-app.use(cors()); 
+app.use(cors({
+    origin: 'https://code-alpha-e-commerce-1.onrender.com'
+})); 
 
 // --- DATABASE CONNECTION ---
 const MONGO_URI = `mongodb+srv://chandrasekhartatimalla_db_user1:chandhu@project.kjzooku.mongodb.net/codealpha_store?appName=Project`;
