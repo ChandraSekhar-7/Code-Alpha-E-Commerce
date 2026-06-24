@@ -9,7 +9,7 @@ async function loadProductDetails() {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/api/products/${productId}`);
+        const response = await fetch(`https://code-alpha-e-commerce-backend-1.onrender.com/api/products/${productId}`);
         const product = await response.json();
 
         if (response.ok) {
